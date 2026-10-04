@@ -909,30 +909,30 @@ current against the implemented reality.
 
 **CRITICAL: `CODEMANIFEST` files — read-only contract definitions. Do NOT modify them. If implementation does not match the contract, fix the implementation — never fix the contract.**
 
-- [ ] **REPL checkpoint (R1→R3)**: in the venv, evaluate the wiring interactively
+- [x] **REPL checkpoint (R1→R3)**: in the venv, evaluate the wiring interactively
   before writing assertions —
   `python -c "from goga_tool_basic_build import register_hooks; from tests.conftest import StubRegistrar, make_amendment; r = StubRegistrar(); register_hooks(r); (d, a, n, hook) = r.calls[0]; ctx = make_amendment(); hook(context=ctx); print(r.calls[0][:3], ctx.sets, ctx.forces)"`
   → `('config', 'amend_config', 'review_presets') [('build.review.strategy', 'medium'), ('build.review.max_iterations', 5)] []`
-- [ ] Create `tests/test_integration.py` (directly in `tests/`, per M2) importing the
+- [x] Create `tests/test_integration.py` (directly in `tests/`, per M2) importing the
   stubs via `from .conftest import make_amendment` and the facade API via
   `from goga_tool_basic_build import register_hooks`; use the `registrar` fixture
-- [ ] Test cross-entity interaction — happy path
+- [x] Test cross-entity interaction — happy path
   `test_platform_flow_subscribes_then_hook_buffers_presets`: build a `StubRegistrar`,
   call `register_hooks(registrar)` positionally; assert exactly one subscription
   `("config", "amend_config", "review_presets")`; then invoke the recorded callable the
   way the platform does — `hook(context=make_amendment())` (declared-name keyword) —
   and assert `ctx.sets == [("build.review.strategy", "medium"), ("build.review.max_iterations", 5)]`
   and `ctx.forces == []`
-- [ ] Test cross-entity interaction — conflict path
+- [x] Test cross-entity interaction — conflict path
   `test_platform_flow_conflict_stops_contribution_before_buffering`: same wiring, but
   `ctx = make_amendment(strategy="short")`; assert
   `pytest.raises(ValueError, match="build.review.strategy")` around `hook(context=ctx)`
   and `ctx.sets == []` (the whole contribution is discarded — nothing applies
   partially)
-- [ ] Run validation: `pytest tests/test_integration.py -v` — both tests pass; then the
+- [x] Run validation: `pytest tests/test_integration.py -v` — both tests pass; then the
   whole suite `pytest tests/ -x` — all 18 test functions green (23 items with
   parametrization)
-- [ ] Verify local usages currency: read `goga_tool_basic_build/.usages/registration.md`,
+- [x] Verify local usages currency: read `goga_tool_basic_build/.usages/registration.md`,
   `profile.md`, `conflicts.md` and confirm every claim matches the implemented behavior
   (single subscription address and name; purity; two buffered presets with values
   `medium` / `5`; the two conflicts with fixed order and error shape naming tool,
@@ -940,9 +940,9 @@ current against the implemented reality.
   knob). All three were verified current at design review — expect **no edits**; if any
   contradiction is found, fix is limited to the usage file's wording (consumer
   documentation), never to the contract or the implementation
-- [ ] Lint and format: `ruff check tests/` → 0 findings; `ruff format tests/` (apply);
+- [x] Lint and format: `ruff check tests/` → 0 findings; `ruff format tests/` (apply);
   re-run `pytest tests/ -x` if formatting changed anything
-- [ ] **Commit checkpoint (only if committing locally)**: commit gate green (M3):
+- [x] **Commit checkpoint (only if committing locally)**: commit gate green (M3):
   `ruff format --check goga_tool_basic_build/ tests/` + `ruff check goga_tool_basic_build/ tests/`
   + `pytest tests/ -x`
 - **→ REVIEW → APPROVAL → NEXT TASK**
@@ -976,35 +976,35 @@ tree; in this environment `$HOME/.venvs/goga-tool-basic-build`).
 
 ## Completion Criteria
 
-- [ ] Every contract entity is implemented in the correct `location` —
+- [x] Every contract entity is implemented in the correct `location` —
       `register_hooks` and `review_presets` in `goga_tool_basic_build/registration.py`
-- [ ] Every contract entity is accessible from the facade —
+- [x] Every contract entity is accessible from the facade —
       `goga_tool_basic_build.__all__ == ["register_hooks", "review_presets"]`, identities
       preserved
-- [ ] Properties and methods match the declared API (both Routines: signatures
+- [x] Properties and methods match the declared API (both Routines: signatures
       `register_hooks(hooks)` / `review_presets(context)`, no return value)
-- [ ] Descriptions are reflected in behavior — the algorithm, requirements, and
+- [x] Descriptions are reflected in behavior — the algorithm, requirements, and
       constraints from the CODEMANIFEST annotations hold (guards in fixed order; two
       unconditional `set` buffers; `ValueError`-only failures; value secrecy; silence)
-- [ ] Contract dependencies are met — platform types referenced under `TYPE_CHECKING`
+- [x] Contract dependencies are met — platform types referenced under `TYPE_CHECKING`
       only; zero runtime goga imports; `[project.dependencies]` empty; `goga>=2.0` in
       the `test` extra
-- [ ] Re-exports are accessible from the facade (Python cell facade rule via `__all__`)
-- [ ] Every coding task followed the TDD workflow (contract tests → code → verification
+- [x] Re-exports are accessible from the facade (Python cell facade rule via `__all__`)
+- [x] Every coding task followed the TDD workflow (contract tests → code → verification
       → logic tests → debugging → re-verification → lint)
-- [ ] Contract tests and logic tests cover facade, API, and behavior within each coding
+- [x] Contract tests and logic tests cover facade, API, and behavior within each coding
       task; all 16 designed test scenarios are implemented exactly as specified
-- [ ] Integration tests exist for the cross-entity wiring (2 stub-only tests; no
+- [x] Integration tests exist for the cross-entity wiring (2 stub-only tests; no
       real-platform integration — ADR decision)
-- [ ] No package boundary was expanded — no new cells, no new interfaces beyond the
+- [x] No package boundary was expanded — no new cells, no new interfaces beyond the
       contract, internal decomposition only
-- [ ] `CODEMANIFEST` files were not modified (contract is read-only; `goga lint` still
+- [x] `CODEMANIFEST` files were not modified (contract is read-only; `goga lint` still
       reports `cells: 1 errors: 0`)
-- [ ] All validation commands pass
-- [ ] Every Usages entry is mentioned in at least one task (`conventions`,
+- [x] All validation commands pass
+- [x] Every Usages entry is mentioned in at least one task (`conventions`,
       `goga-dependency`, `config-amend`, `hook-registration`; local usages `registration`,
       `profile`, `conflicts` verified in Task 3)
-- [ ] The Mandatory Rules were followed throughout: coding style per M1, test rules per
+- [x] The Mandatory Rules were followed throughout: coding style per M1, test rules per
       M2, lint/format enforced at every stage and before every local commit (M3), the
       REPL cycle (evaluate → migrate → re-evaluate) executed inside every coding task
       (M4), all execution in the out-of-tree venv (M5), contract/documentation
