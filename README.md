@@ -1,0 +1,1 @@
+# goga-tool-basic-build
