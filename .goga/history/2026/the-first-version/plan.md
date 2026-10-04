@@ -491,17 +491,17 @@ conftest cleanly and the venv can import the (still missing) package target.
 
 **CRITICAL: `CODEMANIFEST` files — read-only contract definitions. Do NOT modify them. If implementation does not match the contract, fix the implementation — never fix the contract.**
 
-- [ ] Create the task venv outside the project tree (M5): try `/opt/project`; `/opt` is
+- [x] Create the task venv outside the project tree (M5): try `/opt/project`; `/opt` is
   not writable in this environment, so use `$HOME/.venvs/goga-tool-basic-build`
   (`python3 -m venv "$HOME/.venvs/goga-tool-basic-build"`); never inside the repository
-- [ ] Edit `pyproject.toml`: add `"goga>=2.0"` to `[project.optional-dependencies].test`
+- [x] Edit `pyproject.toml`: add `"goga>=2.0"` to `[project.optional-dependencies].test`
   (keep `pytest>=8.0`, `pytest-cov>=5.0`, `pytest-mock>=3.10`, `ruff>=0.15.0`; keep
   `[project.dependencies]` empty; no other metadata changes)
-- [ ] Install editable with the test extra in the venv:
+- [x] Install editable with the test extra in the venv:
   `pip install -e '.[test]'` (from the project root, venv active)
-- [ ] Create `tests/__init__.py` (empty file — makes `tests` a package so later
+- [x] Create `tests/__init__.py` (empty file — makes `tests` a package so later
   `from .conftest import ...` relative imports resolve)
-- [ ] Create `tests/conftest.py` with exactly this content (verbatim from the design —
+- [x] Create `tests/conftest.py` with exactly this content (verbatim from the design —
   duck-typed stubs, the `registrar` fixture, and the `make_amendment` factory whose
   `additional` semantics mirror the loader: `None` means absent/YAML-null, any non-None
   value means present):
@@ -565,20 +565,20 @@ def make_amendment(strategy=None, additional=None, max_iterations=None, review_p
     return StubAmendment(StubSection(build=build))
 ```
 
-- [ ] **REPL checkpoint (R1)**: in the venv, evaluate the scaffolding interactively
+- [x] **REPL checkpoint (R1)**: in the venv, evaluate the scaffolding interactively
   before relying on it — e.g.
   `python -c "from tests.conftest import StubRegistrar, StubAmendment, StubSection, make_amendment; a = make_amendment(strategy='short'); print(a.config.build.review.strategy, a.sets, a.forces)"`
   → must print `short [] []`; also `make_amendment(build_present=False).config.build`
   → `None`. Confirm the stubs import and behave, then leave them untouched (R3 — they
   already are the migrated artifact)
-- [ ] Verify collection: `pytest tests/ --collect-only` — expects "no tests ran" with
+- [x] Verify collection: `pytest tests/ --collect-only` — expects "no tests ran" with
   exit code 5 (no tests collected yet — this is correct at this stage) and **no
   collection errors**; also `python -c "from tests.conftest import StubRegistrar, StubAmendment, StubSection, make_amendment"`
   exits 0
-- [ ] Lint and format the new files (M3):
+- [x] Lint and format the new files (M3):
   `ruff check tests/` → 0 findings; `ruff format tests/` (apply; then re-run
   `ruff check tests/`)
-- [ ] **Commit checkpoint (only if committing locally)**: commit gate green —
+- [x] **Commit checkpoint (only if committing locally)**: commit gate green —
   `ruff format --check tests/`, `ruff check tests/`, `pytest tests/ -x` (exit 5 with no
   errors is the expected pre-Task-2 state; note it in the commit message if needed)
 
