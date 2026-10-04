@@ -682,9 +682,9 @@ non-string strategy conflicts instead of crashing (`isinstance` guard before any
 
 **CRITICAL: `CODEMANIFEST` files — read-only contract definitions. Do NOT modify them. If implementation does not match the contract, fix the implementation — never fix the contract.**
 
-- [ ] **STEP 0 (DECLARATION)**: declare this task ("Task 2 — registration.py + facade")
+- [x] **STEP 0 (DECLARATION)**: declare this task ("Task 2 — registration.py + facade")
   before writing any code
-- [ ] **STEP 1 (CONTRACT TESTS)**: write the contract-tier tests — expected to FAIL at
+- [x] **STEP 1 (CONTRACT TESTS)**: write the contract-tier tests — expected to FAIL at
   this stage (`registration.py` and the facade do not exist yet):
   - Create `tests/test_init.py` with the two facade tests (full specifications in the
     logic-test list below — they are contract tests by nature: facade accessibility and
@@ -700,7 +700,7 @@ non-string strategy conflicts instead of crashing (`isinstance` guard before any
     needed (the registrar arrives via the `registrar` fixture); import the target as
     `from goga_tool_basic_build.registration import register_hooks, review_presets`
   - Confirm they fail for the right reason (import error of the missing module/facade)
-- [ ] **STEP 2 (IMPLEMENTATION — REPL cycle)**:
+- [x] **STEP 2 (IMPLEMENTATION — REPL cycle)**:
   - **REPL evaluate (R1)**: in the venv, from the project root, interactively prototype
     both functions (e.g. `python -i` with the stub classes pasted/imported) and run the
     eight algorithm scenarios against `make_amendment(...)` stubs: absent build; absent
@@ -723,25 +723,25 @@ non-string strategy conflicts instead of crashing (`isinstance` guard before any
     → `[('build.review.strategy', 'medium'), ('build.review.max_iterations', 5)] []`
   - Lint the migrated files immediately (M3 point 1): `ruff check goga_tool_basic_build/`
     and `ruff format goga_tool_basic_build/`
-- [ ] **STEP 3 (INTERFACE VERIFICATION)**: run the STEP 1 contract tests —
+- [x] **STEP 3 (INTERFACE VERIFICATION)**: run the STEP 1 contract tests —
   `pytest tests/test_init.py tests/test_registration.py -v` — the three contract tests
   must all pass now
-- [ ] **STEP 4 (LOGIC TESTS)**: complete `tests/test_registration.py` with the remaining
+- [x] **STEP 4 (LOGIC TESTS)**: complete `tests/test_registration.py` with the remaining
   thirteen designed tests (specifications below — transfer assertions exactly,
   including `match=` anchors per PT011)
-- [ ] **STEP 5 (DEBUGGING — REPL-assisted)**: run `pytest tests/ -x`; for any failure,
+- [x] **STEP 5 (DEBUGGING — REPL-assisted)**: run `pytest tests/ -x`; for any failure,
   reproduce it interactively in the REPL (R1/R2), fix the **implementation** (never the
   tests) until the full suite is green
-- [ ] **STEP 6 (CONTRACT RE-VERIFICATION)**: verify all contract obligations hold —
+- [x] **STEP 6 (CONTRACT RE-VERIFICATION)**: verify all contract obligations hold —
   facade importable (`python -c "import goga_tool_basic_build"`), API shape
   (`python -c "from goga_tool_basic_build import register_hooks, review_presets"`),
   exactly one subscription at `config / amend_config`, `set`-only write footprint on the
   two model-known leaves, `ValueError`-only failures with path+resolution messages
-- [ ] **STEP 7 (LINT)**: `ruff check goga_tool_basic_build/ tests/` → 0 findings;
+- [x] **STEP 7 (LINT)**: `ruff check goga_tool_basic_build/ tests/` → 0 findings;
   `ruff format goga_tool_basic_build/ tests/` (apply); if formatting changed any file,
   re-run `pytest tests/ -x`
-- [ ] **STEP 8 (COMPLETION)**: mark this task's checkboxes complete
-- [ ] **Commit checkpoint (only if committing locally)**: commit gate green (M3):
+- [x] **STEP 8 (COMPLETION)**: mark this task's checkboxes complete
+- [x] **Commit checkpoint (only if committing locally)**: commit gate green (M3):
   `ruff format --check goga_tool_basic_build/ tests/` + `ruff check goga_tool_basic_build/ tests/`
   + `pytest tests/ -x`
 - **→ REVIEW → APPROVAL → NEXT TASK**
