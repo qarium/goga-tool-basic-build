@@ -32,7 +32,18 @@ theme:
     - search.highlight
     - content.code.copy
 
-nav: []
+nav:
+  - Home: index.md
+  - Review presets: review-presets.md
+  - Architecture: architecture.md
+  - API:
+      - Package facade: api/facade.md
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
 
 plugins:
   - search

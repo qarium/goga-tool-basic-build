@@ -4,11 +4,6 @@ A [goga](https://pypi.org/project/goga/) hook tool that gives builds a basic
 review pass by default: the medium review strategy plus a five-iteration review
 cap, applied wherever the project author left the review knobs unwritten.
 
-## Documentation
-
-Full documentation is published at
-<https://qarium.github.io/goga-tool-basic-build/>.
-
 ## How it works
 
 The package registers exactly one hook — `review_presets` on the
@@ -78,6 +73,14 @@ RUN cd /tmp/project && goga install basic-build && rm -rf /tmp/project
 
 USER goga
 ```
+
+## Documentation
+
+- [Review presets](review-presets.md) — what an installed tool guarantees: the
+  presets table, authored-wins, the one tuning knob, and the deliberate
+  conflicts
+- [Architecture](architecture.md) — the cell map and the amendment data flow
+- [API reference](api/facade.md) — the package facade contract
 
 ## Development
 
