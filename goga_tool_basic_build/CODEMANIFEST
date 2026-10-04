@@ -1,0 +1,101 @@
+Usages:
+  conventions: .goga/usages/conventions.md
+  goga-dependency: .goga/usages/cooks/goga-dependency.md
+  config-amend: .goga/usages/github/goga/config/registering-hooks.md
+  hook-registration: .goga/usages/github/goga/hooks/registering-hooks.md
+
+Annotations: |
+  Use `conventions` for code writing rules and testing.
+
+  The cell is a hook-only goga tool: it exposes no command of its own; its
+  entire behavior manifests through the platform's configuration amendment
+  checkpoint.
+
+  Use `goga-dependency` for the platform dependency policy: runtime
+  dependencies stay empty, platform types are referenced under TYPE_CHECKING
+  only, and the package facade stays import-clean without goga installed.
+
+  Use `config-amend` for the amendment view contract the hook operates on:
+  set semantics, silence markers, merge rules, and hard-action failure
+  treatment.
+
+  Value secrecy: any message the cell produces names configuration paths at
+  most — never configuration values.
+
+  The tool is silent by design: no stdout/stderr output, no logging — run
+  feedback belongs to the platform.
+
+---
+
+"register_hooks(hooks: HookRegistrar)":
+  location: registration.py
+  annotations: |
+    Subscribe the tool's single hook to the platform's configuration
+    amendment action — the only subscription of the tool.
+
+    `hooks`: the platform subscription surface delivered by goga when a
+    command first reaches a hook checkpoint; use `hook-registration` for its
+    contract.
+
+    Algorithm:
+    1. Subscribe one hook: domain "config", action "amend_config", hook name
+       "review_presets", callable `review_presets`
+
+    Requirements:
+    - Exactly one subscription; no other domain action is subscribed
+
+    Constraints:
+    - Do not import goga at runtime — follow `goga-dependency`
+    - Use `conventions` for code style and docstrings
+
+"review_presets(context: ConfigAmendment)":
+  location: registration.py
+  annotations: |
+    The tool's single amendment hook: guard the two basic-profile conflicts
+    in a fixed order, then buffer the two review presets. A pure function
+    over the delivered read-and-amend view — no I/O, no state.
+
+    `context`: the read-and-amend view over the authored configuration; use
+    `config-amend` for its read surface and set semantics.
+
+    Algorithm:
+    1. Read the authored build.review.strategy leaf: if it is present and
+       not the value medium, raise ValueError naming the path
+       build.review.strategy and the resolution (remove the authored
+       strategy or uninstall the tool)
+    2. Read the authored build.review.additional section: if it is present
+       with any contents — including an empty mapping — raise ValueError
+       naming the path build.review.additional and the resolution (remove
+       the section or uninstall the tool); an absent or null section is not
+       a conflict
+    3. Buffer a set amendment of build.review.strategy to medium
+    4. Buffer a set amendment of build.review.max_iterations to 5
+
+    Requirements:
+    - An authored strategy that is absent, null, or blank (empty or
+      whitespace-only) counts as unset — no conflict
+    - Both set amendments are buffered unconditionally, including when the
+      authored configuration already carries values at those leaves and
+      when intermediate branches (build, build.review) are absent
+    - The strategy conflict is checked before the additional conflict; when
+      both are present the strategy one is reported
+    - Error messages name the path and the resolution only
+
+    Constraints:
+    - Authored-wins belongs to the platform merge layer — never re-derive
+      it inside the hook
+    - Never use a force amendment; never contribute to
+      build.review.additional or any leaf beyond the two presets
+    - Fail only through ValueError on the two conflicts
+    - No configuration value may appear in any message
+    - Follow `goga-dependency` for platform type references and
+      `conventions` for code style
+
+---
+
+Author: Goga
+CreatedAt: 04/10/26
+Description: |
+  The basic review profile tool: one subscription to the platform's
+  configuration amendment action and one hook guarding two conflicts while
+  buffering two review presets.
